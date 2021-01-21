@@ -5,8 +5,8 @@ import styles from './Main_page.module.scss';
 const MainPage = (props) => {
 
     return(
-        <div>
-            It`s main page
+        <div className={styles.mainPageBody}>
+            
             <div><NavLink to='/users-list'>USERS-LIST</NavLink></div>
             
         </div>

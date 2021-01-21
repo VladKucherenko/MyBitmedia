@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Pagination.module.scss';
 
 const Pagination = (props) => {
@@ -9,8 +9,11 @@ const Pagination = (props) => {
     for (let i = 1; i <= pageCount; i++) {
         pages.push(i);
     }
-
-    const [ currentPortion, setCurrentPortion ] = useState(1);
+    let numberOfPage =  Math.floor(1 * Math.ceil(props.currentPage / 11));
+    const [ currentPortion, setCurrentPortion ] = useState(numberOfPage);
+    useEffect(() => {
+        setCurrentPortion(numberOfPage)
+    }, [numberOfPage])
     let portionNumber = Math.ceil(pageCount / 10);
     let leftBorder = ((currentPortion - 1) * 10) + 1;
     let rightBorder = 10 * currentPortion;

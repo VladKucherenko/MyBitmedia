@@ -1,19 +1,22 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from "react-router-dom";
+import { NavLink, Redirect, useHistory, useParams } from "react-router-dom";
 import { actions, getUsersStatisticsThunk } from '../../redux/user_statistic-reducer';
 import styles from './User_statistic.module.scss';
-import { Line } from 'react-chartjs-2';
 import { getToData, getFromData, getUserStatistic } from '../../redux/user_statistic-selector';
 import { DatePicker, Space } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
+import LineForClicks from './Diagrams/LineForClicks';
+import LineForViews from './Diagrams/LineForViews';
+import Header from '../common/Header/Header';
+import Footer from '../common/Footer/Footer';
 const queryString = require('query-string');;
 
 const UserStatistic = (props) => {
     const { id } = useParams()
     const { RangePicker } = DatePicker;
-    // from = '2019-10-02', to = '2019-10-30'
+    
     const userStatistic = useSelector(getUserStatistic);
     const toData = useSelector(getToData);
     const fromData = useSelector(getFromData);
@@ -26,36 +29,6 @@ const UserStatistic = (props) => {
         dispatch(getUsersStatisticsThunk(id, parsed.from, parsed.to))
     }, [])
     
-    
-
-    const stateForClicks = {
-        labels: userStatistic.dateArray,
-        datasets: [
-            {
-                label: 'Clicks',
-                fill: false,
-                lineTension: 0.5,
-                backgroundColor: 'rgba(75,192,192,1)',
-                borderColor: 'rgba(0,0,0,1)',
-                borderWidth: 2,
-                data: userStatistic.clicksArray
-            }
-        ]
-    }
-    const stateForViews = {
-        labels: userStatistic.dateArray,
-        datasets: [
-            {
-                label: 'Views',
-                fill: false,
-                lineTension: 0.5,
-                backgroundColor: 'rgba(75,192,192,1)',
-                borderColor: 'rgba(0,0,0,1)',
-                borderWidth: 2,
-                data: userStatistic.viewsArray
-            }
-        ]
-    }
     const dateFormat = "YYYY-MM-DD";
     const changeDate = (mode) => {
         
@@ -73,14 +46,25 @@ const UserStatistic = (props) => {
             search: queryString.stringify(parsedForUrl)
         })
     },[toData, fromData])
-    debugger
     return (
-        <div >
-            <div>
+        <div className={styles.userStatisticBody}>
+            <Header />
+            <div className={styles.breadcrams}>
+                <NavLink to='/' >
+                    Main Page
+                </NavLink>
+                &nbsp; &gt; &nbsp; 
+                <NavLink to={`/users-list`} >
+                   User statistic 
+                </NavLink>
+                &nbsp; &gt; &nbsp; 
                 {userStatistic.fullName}
             </div>
-            <div>
-                <Space direction="vertical" size={12}>
+            <div className={styles.fullName}>
+                {userStatistic.fullName}
+            </div>
+            <div className={styles.dataPickerBox}>
+                <Space className={styles.dataPicker} direction="vertical" size={12}>
                     <RangePicker bordered={false} 
                         onChange={(value, mode) => changeDate(mode)}
                         value={[moment(fromData, dateFormat), moment(toData, dateFormat)]}
@@ -93,57 +77,11 @@ const UserStatistic = (props) => {
                         }} />
                 </Space>
             </div>
-            <div style={{ width: '1050px', height: '550px' }}>
-                <Line
-                    data={stateForClicks}
-                    options={{
-                        title: {
-                            display: true,
-                            text: 'Clicks',
-                            fontSize: 20
-                        },
-                        legend: {
-                            display: true,
-                            position: 'right'
-                        },
-                        scales: {
-                            xAxes: [
-                                {
-                                    gridLines: {
-                                        display: false
-                                    }
-                                }
-                            ]
-                        }
-                    }}
-                />
+            <div className={styles.diagrams}>
+                <LineForClicks />
+                <LineForViews />
             </div>
-            <div style={{ width: '1050px', height: '550px' }}>
-
-                <Line
-                    data={stateForViews}
-                    options={{
-                        title: {
-                            display: true,
-                            text: 'Views',
-                            fontSize: 20
-                        },
-                        legend: {
-                            display: true,
-                            position: 'right'
-                        },
-                        scales: {
-                            xAxes: [
-                                {
-                                    gridLines: {
-                                        display: false
-                                    }
-                                }
-                            ]
-                        }
-                    }}
-                />
-            </div>
+            <Footer />
         </div>
     );
 }

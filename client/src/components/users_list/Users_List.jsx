@@ -4,6 +4,9 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { actions, getUsersThunk } from '../../redux/users_list-reducer';
 import { getCurrentPage, getPortionCount, getTotalUsersCount, getUsersList } from '../../redux/users_list-selector';
 import Pagination from './pagination/Pagination';
+import Header from '../common/Header/Header';
+import Footer from '../common/Footer/Footer';
+import styles from './Users_list.module.scss';
 const queryString = require('query-string');
 
 const UsersList = (props) => {
@@ -33,16 +36,17 @@ const UsersList = (props) => {
 
     useEffect( () => {
         const parsed = queryString.parse(history.location.search)
-        dispatch(actions.changeCurrentPage(Number(parsed.page)));
-        dispatch(actions.changePortionCount(Number(parsed.count)));
+        debugger
+        dispatch(actions.changeCurrentPage(Number(parsed.page ? parsed.page : currentPage)));
+        dispatch(actions.changePortionCount(Number(parsed.count ? parsed.count : portionCount)));
         dispatch(getUsersThunk(Number(parsed.page), Number(parsed.count)))
     }, [])
 
     useEffect(() => {
         const parsedForUrl = {};
         if(!!currentPage) parsedForUrl.page = currentPage
-        if(!!portionCount) parsedForUrl.count = portionCount
-        
+        if(!!portionCount) parsedForUrl.count = portionCount        
+        dispatch(getUsersThunk(Number(parsedForUrl.page), Number(parsedForUrl.count)))
         history.push({
             pathname: '/users-list',
             search: queryString.stringify(parsedForUrl)
@@ -51,8 +55,20 @@ const UsersList = (props) => {
     
     return(
         <div>
-            It`s users list
-            <table>
+            <Header />
+            <div className={styles.breadcrams}>
+                <NavLink to='/' >
+                    Main Page
+                </NavLink>
+                &nbsp; &gt; &nbsp;
+                User statistics
+            </div>
+            {/* It`s users list */}
+            <div className={styles.title}>
+                User statistics
+            </div>
+
+            <table >
             <thead>
                 
                     <th>ID</th>
@@ -74,6 +90,7 @@ const UsersList = (props) => {
             totalUsersCount={totalUsersCount}
             portionCount={portionCount}
             currentPage={currentPage}/>
+            <Footer />
         </div>
     );
 }
