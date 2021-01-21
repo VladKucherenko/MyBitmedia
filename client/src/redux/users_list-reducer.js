@@ -43,9 +43,24 @@ export const actions = {
     changePortionCount: (portionCount) => ({type: SETPORTION, portionCount})
 }
 
-export const getUsersThunk = (page, count) => async dispatch => {
+export const getUsersThunk = (page, count) => async (dispatch, getState) => {
+
+    try {
+     
     let response = await usersAPI.getUsers(page, count)
     if (response.resultCode === 0){
+        
         dispatch(actions.getUsers(response.usersList, response.totalUsersCount))
+        
+    }else{
+        throw 'myException';
     }
+     }
+    catch (e) {
+        alert(e.response.data.message); 
+        dispatch(actions.changeCurrentPage(1))
+        dispatch(actions.changePortionCount(10))
+        dispatch(getUsersThunk(getState().currentPage, getState().portionCount))
+     }
+    
 }

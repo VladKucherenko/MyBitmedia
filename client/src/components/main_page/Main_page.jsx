@@ -1,14 +1,17 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom';
+import cn from 'classnames';
+import React from 'react';
+import Footer from './common/Footer/Footer';
+import Header from './common/Header/Header';
+import Main from './common/Main/Main';
 import styles from './Main_page.module.scss';
 
 const MainPage = (props) => {
 
-    return(
+    return (
         <div className={styles.mainPageBody}>
-            
-            <div><NavLink to='/users-list'>USERS-LIST</NavLink></div>
-            
+            <Header />
+            <Main />
+            <Footer />
         </div>
     );
 }

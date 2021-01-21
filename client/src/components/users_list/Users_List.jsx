@@ -36,14 +36,14 @@ const UsersList = (props) => {
 
     useEffect( () => {
         const parsed = queryString.parse(history.location.search)
-        debugger
-        dispatch(actions.changeCurrentPage(Number(parsed.page ? parsed.page : currentPage)));
+        let newPage = Number(parsed.page ? parsed.page : currentPage)
+        dispatch(actions.changeCurrentPage(newPage));
         dispatch(actions.changePortionCount(Number(parsed.count ? parsed.count : portionCount)));
-        dispatch(getUsersThunk(Number(parsed.page), Number(parsed.count)))
     }, [])
 
     useEffect(() => {
-        const parsedForUrl = {};
+        if(currentPage !== null){
+            const parsedForUrl = {};
         if(!!currentPage) parsedForUrl.page = currentPage
         if(!!portionCount) parsedForUrl.count = portionCount        
         dispatch(getUsersThunk(Number(parsedForUrl.page), Number(parsedForUrl.count)))
@@ -51,6 +51,8 @@ const UsersList = (props) => {
             pathname: '/users-list',
             search: queryString.stringify(parsedForUrl)
         })
+        }
+        
     },[currentPage, portionCount])
     
     return(
@@ -63,15 +65,13 @@ const UsersList = (props) => {
                 &nbsp; &gt; &nbsp;
                 User statistics
             </div>
-            {/* It`s users list */}
             <div className={styles.title}>
                 User statistics
             </div>
-
-            <table >
+            <div className={styles.table_container}>
+            <table className={styles.usersTable}>
             <thead>
-                
-                    <th>ID</th>
+                    <th>Id</th>
                     <th>First name</th>
                     <th>Last Name</th>
                     <th>Email</th>
@@ -86,10 +86,13 @@ const UsersList = (props) => {
             </tbody>
             </table>
 
-            <Pagination getNewPortionOfUsers={getNewPortionOfUsers}
-            totalUsersCount={totalUsersCount}
-            portionCount={portionCount}
-            currentPage={currentPage}/>
+            <div className={styles.pagination}>
+                <Pagination getNewPortionOfUsers={getNewPortionOfUsers}
+                totalUsersCount={totalUsersCount}
+                portionCount={portionCount}
+                currentPage={currentPage}/>
+            </div>
+            </div>
             <Footer />
         </div>
     );

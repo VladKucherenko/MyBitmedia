@@ -10,13 +10,15 @@ exports.usersList = async (req, res) => {
     const intPage = Number.isInteger(parseInt(page))
     const intCount = Number.isInteger(parseInt(count))
     const maxPage = usersDataArray.length / count;
-    if (intCount > 50) {
+    if (count > 50) {
         return res.status(400).json({ message: `Query params 'count' has limit of 50`, resultCode: 1 })
     } 
     else if (page > maxPage) {
+        console.log('Max page error')
         return res.status(400).json({ message: `Query params 'page' is larger than maxPage=${maxPage}(maxPage = existing pages)`, resultCode: 1 })
     }
-    if ( intPage && intCount) {
+    else if ( intPage && intCount) {
+        
         await knex.select('users.id', 'users.first_name',
             'users.last_name', 'users.email', 'users.gender',
             'users.ip_address')
@@ -52,10 +54,9 @@ exports.usersStatistic = async (req, res) => {
         clicksArray[index] = 0
         viewsArray[index] = 0
     }
-    // console.log(dateArray);
     let { from = '2019-10-01', to = '2019-10-31' } = req.query;
     let { id } = req.params;
-    if(validateDate(from) && validateDate(to)){
+    if(validateDate(from) && validateDate(to)) {
         await knex
         .select('users.first_name',
         'users.last_name','usersStatistics.user_id', 
@@ -66,7 +67,7 @@ exports.usersStatistic = async (req, res) => {
         .where('usersStatistics.user_id', id)
         .orderBy('date', 'asc')
         .then(userData => {
-            console.log(userData)
+            // console.log(userData)
             let fullName = userData[0].first_name + ' ' + userData[0].last_name
             
             userData.forEach((user, indexUser) => {
@@ -93,16 +94,14 @@ exports.usersStatistic = async (req, res) => {
             clicksArray = clicksArray.filter((clicks, index) => {
                 return (index >= fromIndex && index <= toIndex)
             })
-            
-            
+
             res.json({ userStatistic: {fullName, dateArray, viewsArray, clicksArray} , from, to, resultCode: 0})
         })
         .catch(err => {
             res.json({ message: `There was an error retrieving data: ${err}`, resultCode: 1 })
         })
     } else{
-        // console.log('Params are incorrect')
-        return res.status(400).json({ message: `Incorrect query params`, resultCode: 1 })
+        return res.status(400).json({ message: `Incorrect query params`,  resultCode: 1 })
     }
 }
 

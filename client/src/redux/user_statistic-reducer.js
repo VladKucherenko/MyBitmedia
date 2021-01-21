@@ -11,20 +11,20 @@ let initialState = {
 
 export const usersStatistic = (state = initialState, action) => {
     switch (action.type) {
-        case GETUSERSTATISTIC:{
-            return{
+        case GETUSERSTATISTIC: {
+            return {
                 ...state,
                 userStatistic: action.userStatistic
             }
         }
         case SETFROMTO: {
-            return{
+            return {
                 ...state,
                 from: action.from,
                 to: action.to
             }
         }
-        default:{
+        default: {
             return state
         }
     }
@@ -32,14 +32,25 @@ export const usersStatistic = (state = initialState, action) => {
 
 
 export const actions = {
-    getUserStatistic: (userStatistic) => ({type: GETUSERSTATISTIC, userStatistic}),
-    setFromTo: (from, to) => ({type: SETFROMTO, from, to})
+    getUserStatistic: (userStatistic) => ({ type: GETUSERSTATISTIC, userStatistic }),
+    setFromTo: (from, to) => ({ type: SETFROMTO, from, to })
 }
 
-export const getUsersStatisticsThunk = (id, from, to) => async dispatch => {
-    let response = await usersAPI.getUserStatistic(id, from, to)
-    if (response.resultCode === 0){
-        dispatch(actions.setFromTo(response.from, response.to))
-        dispatch(actions.getUserStatistic(response.userStatistic))
+export const getUsersStatisticsThunk = (id, from, to) => async (dispatch, getState) => {
+    try {
+
+        let response = await usersAPI.getUserStatistic(id, from, to)
+        if (response.resultCode === 0) {
+            dispatch(actions.setFromTo(response.from, response.to))
+            dispatch(actions.getUserStatistic(response.userStatistic))
+        } else {
+            throw 'myException';
+        }
     }
+    catch (e) {
+        alert(e.response.data.message);
+        dispatch(actions.setFromTo('2019-10-01', '2019-10-31'))
+        dispatch(getUsersStatisticsThunk(id, getState().from ,getState().to));
+    }
+
 }

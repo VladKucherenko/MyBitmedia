@@ -13,3 +13,12 @@
     width: 100%;
     height: 350px;
 }
+
+
+@media (max-width: 480px) { 
+    .title{
+        font-family: $primary-font;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+}

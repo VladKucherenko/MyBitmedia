@@ -7,6 +7,15 @@ import styles from './Diagrams.module.scss'
 
 const LineForViews = (props) => {
     const userStatistic = useSelector(getUserStatistic);
+    let pointRadiusArray;
+    if(userStatistic.dateArray){
+        pointRadiusArray = userStatistic.dateArray.map((date, index) => {
+        if(index === 0 || index === userStatistic.dateArray.length-1){
+            return 5
+        }
+        else return 0
+    })
+    }
     const stateForViews = {
         labels: userStatistic.dateArray,
         datasets: [
@@ -14,10 +23,12 @@ const LineForViews = (props) => {
                 label: 'Views',
                 fill: false,
                 lineTension: 0.5,
-                backgroundColor: 'rgba(75,192,192,1)',
-                borderColor: 'rgba(0,0,0,1)',
-                borderWidth: 2,
-                data: userStatistic.viewsArray
+                backgroundColor: '#3A80BA',
+                borderColor: '#3A80BA',
+                borderWidth: 4,
+                data: userStatistic.viewsArray,
+                pointRadius: 2,
+                pointRadius: pointRadiusArray
             }
         ]
     }

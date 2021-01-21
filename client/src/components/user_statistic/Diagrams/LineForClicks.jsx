@@ -7,7 +7,16 @@ import styles from './Diagrams.module.scss'
 
 const LineForClicks = (props) => {
     const userStatistic = useSelector(getUserStatistic);
-
+    let pointRadiusArray;
+    if(userStatistic.dateArray){
+        pointRadiusArray = userStatistic.dateArray.map((date, index) => {
+        if(index === 0 || index === userStatistic.dateArray.length-1){
+            return 5
+        }
+        else return 0
+    })
+    }
+     
     const stateForClicks = {
         labels: userStatistic.dateArray,
         datasets: [
@@ -19,7 +28,7 @@ const LineForClicks = (props) => {
                 borderColor: '#3A80BA',
                 borderWidth: 4,
                 data: userStatistic.clicksArray,
-            
+                pointRadius: pointRadiusArray
             }
             
         ]
