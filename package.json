@@ -1,0 +1,19 @@
+{
+  "name": "bitmediatest",
+  "version": "1.0.0",
+  "description": "bitmedia test task",
+  "main": "cd backend server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladKucherenko/MyBitmediaTestTask.git"
+  },
+  "author": "Vlad Kucherenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladKucherenko/MyBitmediaTestTask/issues"
+  },
+  "homepage": "https://github.com/VladKucherenko/MyBitmediaTestTask#readme"
+}
