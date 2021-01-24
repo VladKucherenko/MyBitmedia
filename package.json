@@ -4,6 +4,7 @@
   "description": "bitmedia test task",
   "main": "server.js",
   "scripts": {
+    "heroku-postbuild": "cd backend && npm install && npm start && cd .. && cd client && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
