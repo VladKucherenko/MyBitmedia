@@ -4,7 +4,18 @@ const cors = require('cors')
 const helmet = require('helmet')
 const router = require('./routes/users-route')
 const app = express()
-const port = 5000;
+
+const path = require('path');
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, 'client/build')));
+// Handle React routing, return all requests to React app
+  app.get('*', function(req, res) {
+    res.sendFile(path.join('F:\FrontEnd\React\Node-js\BitmediaTest\client\build', 'index.html'));
+  });
+}
+
+const port = process.env.PORT || 5000;
 
 app.use(cors())
 app.use(helmet())
